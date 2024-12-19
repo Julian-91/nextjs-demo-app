@@ -4,11 +4,12 @@ on:
   pull_request:
     branches: [main]
 
-# Add permissions block
+# Update permissions block to include contents read
 permissions:
   pull-requests: write
   deployments: read
   statuses: read
+  contents: read
 
 jobs:
   build:
@@ -16,6 +17,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Add token for authentication
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
