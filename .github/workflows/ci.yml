@@ -4,12 +4,14 @@ on:
   pull_request:
     branches: [main]
 
-# Update permissions block to include contents read
+# Update permissions block with additional permissions
 permissions:
   pull-requests: write
-  deployments: read
-  statuses: read
+  deployments: write
+  statuses: write
   contents: read
+  checks: write
+  actions: read
 
 jobs:
   build:
