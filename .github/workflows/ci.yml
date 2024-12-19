@@ -57,7 +57,8 @@ jobs:
         id: vercel-preview
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 300
+          max_timeout: 60
+          project_name: 'nextjs-demo-app'
 
       - name: Print Preview URL
         run: |
