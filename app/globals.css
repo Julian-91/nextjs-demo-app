@@ -19,3 +19,13 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+body.blue-bg {
+  background: #2563eb;
+  /* This is a nice blue color */
+}
+
+body.green-bg {
+  background: #16a34a;
+  /* This is a nice green color */
+}
