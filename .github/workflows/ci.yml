@@ -79,10 +79,10 @@ jobs:
           MULTION_API_KEY: ${{ secrets.MULTION_API_KEY }}
         run: |
           # Install dependencies
-          npm install multion typescript ts-node @types/node
+          npm install multion
 
           # Run the test script
-          npx ts-node multion-test.ts \
+          node multion-test.mjs \
             "${{ github.event.pull_request.html_url }}" \
             "${{ steps.vercel-preview.outputs.url }}"
 
