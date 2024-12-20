@@ -93,7 +93,4 @@ jobs:
           message: |
             ## Multion Test Results 🤖
             
-            Preview URL: ${{ steps.vercel-preview.outputs.url }}
-            
-            PR Response: ${{ steps.multion-test.outputs.pr_response }}
-            Preview Response: ${{ steps.multion-test.outputs.preview_response }}
+            ${{ steps.multion-test.outputs.preview_response }}
