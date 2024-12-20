@@ -4,14 +4,14 @@ on:
   pull_request:
     branches: [main]
 
-# Update permissions block with additional permissions
-permissions:
-  pull-requests: write
-  deployments: write
-  statuses: write
-  contents: read
-  checks: write
-  actions: read
+# # Update permissions block with additional permissions
+# permissions:
+#   pull-requests: write
+#   deployments: write
+#   statuses: write
+#   contents: read
+#   checks: write
+#   actions: read
 
 jobs:
   build:
@@ -54,6 +54,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Wait for Vercel Preview
         uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
         id: vercel-preview
@@ -64,3 +71,30 @@ jobs:
       - name: Print Preview URL
         run: |
           echo "Preview URL: ${{ steps.vercel-preview.outputs.url }}"
+
+      # Run Multion tests
+      - name: Run Multion Tests
+        id: multion-test
+        env:
+          MULTION_API_KEY: ${{ secrets.MULTION_API_KEY }}
+        run: |
+          # Install dependencies
+          npm install multion typescript ts-node @types/node
+
+          # Run the test script
+          npx ts-node multion-test.ts \
+            "${{ github.event.pull_request.html_url }}" \
+            "${{ steps.vercel-preview.outputs.url }}"
+
+      # Add comment to PR
+      - name: Comment on PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            ## Multion Test Results 🤖
+            
+            Preview URL: ${{ steps.vercel-preview.outputs.url }}
+            
+            PR Response: ${{ steps.multion-test.outputs.pr_response }}
+            Preview Response: ${{ steps.multion-test.outputs.preview_response }}
+          comment_tag: execution
