@@ -79,10 +79,8 @@ jobs:
           MULTION_API_KEY: ${{ secrets.MULTION_API_KEY }}
         run: |
           npm install multion
-          OUTPUT=$(node multion-test.mjs \
-            "${{ github.event.pull_request.html_url }}" \
-            "${{ steps.vercel-preview.outputs.url }}")
-          echo "browse_response<<EOF" >> $GITHUB_OUTPUT
+          OUTPUT=$(node multion-test.mjs "${{ github.event.pull_request.html_url }}" "${{ steps.vercel-preview.outputs.url }}")
+          echo "preview_response<<EOF" >> $GITHUB_OUTPUT
           echo "$OUTPUT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
@@ -97,5 +95,3 @@ jobs:
             
             PR Response: ${{ steps.multion-test.outputs.pr_response }}
             Preview Response: ${{ steps.multion-test.outputs.preview_response }}
-            Preview Response 2: ${{ steps.multion-test.outputs.browse_response }}
-          comment_tag: execution

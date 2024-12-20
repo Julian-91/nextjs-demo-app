@@ -8,7 +8,7 @@ const previewUrl = process.argv[3];
 
 const multion = new MultiOnClient({ apiKey: process.env.MULTION_API_KEY });
 const prResponse = await multion.browse({
-    cmd: 'Based on the content of the PR, output a clear test to perform on the preview site',
+    cmd: 'Based on the content of the PR, output a clear test to perform on the preview site.',
     url: prUrl,
     maxSteps: 3,
 });
