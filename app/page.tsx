@@ -6,7 +6,7 @@ export default function Home() {
 
   const changeBackground = (color: string) => {
     // Remove any existing color classes
-    document.body.classList.remove('blue-bg', 'green-bg');
+    document.body.classList.remove('blue-bg', 'green-bg', 'red-bg');
 
     if (color) {
       document.body.classList.add(`${color}-bg`);
@@ -32,6 +32,13 @@ export default function Home() {
             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
           >
             Change to Green
+          </button>
+
+          <button
+            onClick={() => changeBackground('red')}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+          >
+            Change to Red
           </button>
 
           {bgColor && (
