@@ -78,17 +78,17 @@ jobs:
         env:
           MULTION_API_KEY: ${{ secrets.MULTION_API_KEY }}
         run: |
-          # Install dependencies
           npm install multion
-
-          # Run the test script
-          node multion-test.mjs \
+          OUTPUT=$(node multion-test.mjs \
             "${{ github.event.pull_request.html_url }}" \
-            "${{ steps.vercel-preview.outputs.url }}"
+            "${{ steps.vercel-preview.outputs.url }}")
+          echo "browse_response<<EOF" >> $GITHUB_OUTPUT
+          echo "$OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       # Add comment to PR
       - name: Comment on PR
-        uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
             ## Multion Test Results 🤖
@@ -97,4 +97,5 @@ jobs:
             
             PR Response: ${{ steps.multion-test.outputs.pr_response }}
             Preview Response: ${{ steps.multion-test.outputs.preview_response }}
+            Preview Response 2: ${{ steps.multion-test.outputs.browse_response }}
           comment_tag: execution
