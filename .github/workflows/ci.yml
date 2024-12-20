@@ -61,6 +61,9 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Install dependencies
+        run: npm install
+
       - name: Wait for Vercel Preview
         uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
         id: vercel-preview
@@ -78,7 +81,6 @@ jobs:
         env:
           MULTION_API_KEY: ${{ secrets.MULTION_API_KEY }}
         run: |
-          npm install multion
           OUTPUT=$(node multion-test.mjs "${{ github.event.pull_request.html_url }}" "${{ steps.vercel-preview.outputs.url }}")
           echo "preview_response<<EOF" >> $GITHUB_OUTPUT
           echo "$OUTPUT" >> $GITHUB_OUTPUT
