@@ -14,39 +14,49 @@ async function main() {
             max_tokens: 4000,
             messages: [{
                 role: "user",
-                content: `You are an expert in Playwright E2E testing. Based on the following PR changes, generate test scaffolding.
-                For each main UI component or feature change in the PR:
-                1. Create appropriate selectors using data-testid, role, or other reliable attributes
-                2. Define empty test cases with descriptive names
-                3. Include setup with test.describe() and test.beforeEach() if needed
-                4. Add comments indicating what needs to be tested
-                
-                Fill in all selectors but leave the actual test logic empty.
-                Do NOT include any markdown syntax or code block indicators.
-                Prefer role-based selectors or data-testid when possible.
-                Output ONLY the raw test code that can be directly saved to a .spec.ts file.
-                
-                PR Changes:
-                ${diff}
-                
-                Example format:
-                import { test, expect } from '@playwright/test';
+                content: `You are an expert in Playwright E2E testing. Analyze the following PR diff and create test scaffolding ONLY for newly added functionality.
+        Focus exclusively on new components, features, or UI elements that were added in this PR.
+        Ignore modified or deleted code - only create tests for completely new additions.
+
+        For each new feature or component:
+        1. Create appropriate selectors using data-testid, role, or other reliable attributes
+        2. Define empty test cases with descriptive names that cover the new functionality
+        3. Include setup with test.describe() and test.beforeEach() if needed
+        4. Add comments indicating what needs to be tested
         
-                // Selectors
-                const submitButton = 'button[role="button"][name="Submit"]';
-                const nameInput = 'input[data-testid="name-input"]';
-                const errorMessage = '[role="alert"]';
+        Fill in all selectors but leave the actual test logic empty.
+        Do NOT include any markdown syntax or code block indicators.
+        Prefer role-based selectors or data-testid when possible.
+        Output ONLY the raw test code that can be directly saved to a .spec.ts file.
+        If no new functionality is added in the PR, output: "No new functionality to test."
         
-                test.describe('Login Form', () => {
-                  test.beforeEach(async ({ page }) => {
-                    // Setup code here
-                  });
+        PR Changes:
+        ${diff}
         
-                  test('should show error with empty fields', async ({ page }) => {
-                    // 1. Click submit with empty fields
-                    // 2. Verify error message
-                  });
-                });`
+        Example format for new functionality:
+        import { test, expect } from '@playwright/test';
+
+        // Selectors for new LoginButton component
+        const loginButton = 'button[role="button"][name="Login"]';
+        const loginModal = '[role="dialog"][aria-label="Login"]';
+        const closeButton = 'button[aria-label="Close login modal"]';
+
+        test.describe('New Login Button', () => {
+          test.beforeEach(async ({ page }) => {
+            await page.goto('/');
+          });
+
+          test('should open login modal when clicked', async ({ page }) => {
+            // 1. Click login button
+            // 2. Verify modal appears
+          });
+
+          test('should close modal with close button', async ({ page }) => {
+            // 1. Open modal
+            // 2. Click close
+            // 3. Verify modal closed
+          });
+        });`
             }]
         });
         const testContent = message.content[0].text;
