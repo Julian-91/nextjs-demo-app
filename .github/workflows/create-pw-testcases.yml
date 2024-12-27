@@ -1,7 +1,8 @@
 name: Generate E2E Testcases
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened]
+
 jobs:
   generate-tests:
     runs-on: ubuntu-latest
