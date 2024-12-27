@@ -31,32 +31,7 @@ async function main() {
         If no new functionality is added in the PR, output: "No new functionality to test."
         
         PR Changes:
-        ${diff}
-        
-        Example format for new functionality:
-        import { test, expect } from '@playwright/test';
-
-        // Selectors for new LoginButton component
-        const loginButton = 'button[role="button"][name="Login"]';
-        const loginModal = '[role="dialog"][aria-label="Login"]';
-        const closeButton = 'button[aria-label="Close login modal"]';
-
-        test.describe('New Login Button', () => {
-          test.beforeEach(async ({ page }) => {
-            await page.goto('/');
-          });
-
-          test('should open login modal when clicked', async ({ page }) => {
-            // 1. Click login button
-            // 2. Verify modal appears
-          });
-
-          test('should close modal with close button', async ({ page }) => {
-            // 1. Open modal
-            // 2. Click close
-            // 3. Verify modal closed
-          });
-        });`
+        ${diff}`
             }]
         });
         const testContent = message.content[0].text;
