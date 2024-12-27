@@ -37,7 +37,6 @@ jobs:
         id: diff
         run: |
           git diff ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} > pr_diff.txt
-          echo "diff=$(cat pr_diff.txt)" >> $GITHUB_OUTPUT
 
       - name: Generate E2E tests
         id: generate
@@ -48,11 +47,15 @@ jobs:
 
       - name: Commit and push tests
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add e2e/generated/*.spec.ts
-          git commit -m "chore: add generated e2e tests"
-          git push
+          if [[ -n "$(git status --porcelain e2e/generated/)" ]]; then
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+            git add e2e/generated/*.spec.ts
+            git commit -m "chore: add generated e2e tests"
+            git push
+          else
+            echo "No new tests to commit"
+          fi
 
       - name: Install Playwright
         run: npx playwright install --with-deps chromium
