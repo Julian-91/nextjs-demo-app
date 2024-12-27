@@ -23,6 +23,13 @@ async function main() {
         2. Define empty test cases with descriptive names that cover the new functionality
         3. Include setup with test.describe() and test.beforeEach() if needed
         4. Add comments indicating what needs to be tested
+
+        When creating selectors, strictly follow these Playwright best practices in order of preference:
+        1. getByRole() - Use ARIA roles with name option if available (e.g., getByRole('button', { name: 'Submit' }))
+        2. getByLabel() - For form fields with associated labels
+        3. getByText() - For finding elements by their text content
+        4. getByTestId() - Use data-testid as a last resort
+        5. Avoid CSS selectors unless absolutely necessary
         
         Fill in all selectors but leave the actual test logic empty.
         Do NOT include any markdown syntax or code block indicators.
