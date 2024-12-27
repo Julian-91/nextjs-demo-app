@@ -1,4 +1,6 @@
+import fs from 'fs/promises';
 import Anthropic from "@anthropic-ai/sdk";
+
 const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
 });
@@ -6,6 +8,7 @@ async function main() {
     try {
         const diff = await fs.readFile('pr_diff.txt', 'utf-8');
         await fs.mkdir('e2e/generated', { recursive: true });
+
         const message = await anthropic.messages.create({
             model: "claude-3-5-sonnet-20241022",
             max_tokens: 4000,
@@ -29,9 +32,12 @@ async function main() {
             }]
         });
         const testContent = message.content[0].text;
+
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const filename = `e2e/generated/pr-${timestamp}.spec.ts`;
+
         await fs.writeFile(filename, testContent, 'utf-8');
+
         console.log(`Successfully generated test: ${filename}`);
     } catch (error) {
         console.error('Error generating tests:', error);
