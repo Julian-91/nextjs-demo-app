@@ -45,7 +45,26 @@ jobs:
         run: |
           node pw-test-generator.mjs
 
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Run playwright tests
+        id: playwright
+        continue-on-error: true
+        run: npx playwright test
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.vercel-preview.outputs.url }}
+
+      - name: Review Generated Tests
+        if: steps.playwright.outcome == 'failure'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node review-tests.mjs
+
       - name: Commit and push tests
+        if: success()
         run: |
           if [[ -n "$(git status --porcelain e2e/generated/)" ]]; then
             git config --global user.name 'github-actions[bot]'
@@ -56,11 +75,3 @@ jobs:
           else
             echo "No new tests to commit"
           fi
-
-      - name: Install Playwright
-        run: npx playwright install --with-deps chromium
-
-      - name: Run playwright tests
-        run: npx playwright test
-        env:
-          PLAYWRIGHT_BASE_URL: ${{ steps.vercel-preview.outputs.url }}
