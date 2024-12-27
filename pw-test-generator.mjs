@@ -14,8 +14,8 @@ async function main() {
             max_tokens: 4000,
             messages: [{
                 role: "user",
-                content: `You are an expert in Playwright E2E testing. Based on the following PR changes, generate appropriate e2e tests. 
-      The tests should cover the main user flows affected by these changes.
+                content: `You are an expert in Playwright E2E testing. Based on the following PR changes, generate a single e2e test. 
+      The test should cover the main user flows affected by these changes.
       Do NOT include any markdown syntax or code block indicators (like \`\`\`typescript).
       Output ONLY the raw test code that can be directly saved to a .spec.ts file.
       
