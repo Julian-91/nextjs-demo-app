@@ -16,7 +16,8 @@ async function main() {
                 role: "user",
                 content: `You are an expert in Playwright E2E testing. Based on the following PR changes, generate appropriate e2e tests. 
       The tests should cover the main user flows affected by these changes.
-      Output only the test code, no explanations.
+      Do NOT include any markdown syntax or code block indicators (like \`\`\`typescript).
+      Output ONLY the raw test code that can be directly saved to a .spec.ts file.
       
       PR Changes:
       ${diff}
