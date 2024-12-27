@@ -29,7 +29,8 @@ async function main() {
       4. Uses page object model if appropriate
       5. Includes appropriate setup and teardown
       6. Is written in TypeScript
-      7. Use baseUrl: '/'`
+      7. Use baseUrl: '/'
+      8. Use web-first assertions if possible`
             }]
         });
         const testContent = message.content[0].text;

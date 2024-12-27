@@ -29,3 +29,8 @@ body.green-bg {
   background: #16a34a;
   /* This is a nice green color */
 }
+
+body.red-bg {
+  background: #ef4444;
+  /* This is a nice red color */
+}
