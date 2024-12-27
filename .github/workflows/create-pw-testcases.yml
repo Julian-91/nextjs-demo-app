@@ -1,4 +1,4 @@
-name: Generate E2E Tests
+name: Generate E2E Testcases
 on:
   pull_request:
     types: [opened, synchronize]
@@ -38,30 +38,12 @@ jobs:
         run: |
           git diff ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} > pr_diff.txt
 
-      - name: Generate E2E tests
+      - name: Generate E2E testcases
         id: generate
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           node pw-test-generator.mjs
-
-      - name: Install Playwright
-        run: npx playwright install --with-deps chromium
-
-      - name: Run playwright tests
-        id: playwright
-        continue-on-error: true
-        run: npx playwright test
-        env:
-          PLAYWRIGHT_BASE_URL: ${{ steps.vercel-preview.outputs.url }}
-
-      - name: Review Generated Tests
-        if: steps.playwright.outcome == 'failure'
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node review-tests.mjs
 
       - name: Commit and push tests
         if: success()

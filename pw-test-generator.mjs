@@ -14,23 +14,39 @@ async function main() {
             max_tokens: 4000,
             messages: [{
                 role: "user",
-                content: `You are an expert in Playwright E2E testing. Based on the following PR changes, generate appropriate e2e tests. 
-      The tests should cover the main user flows affected by these changes.
-      Do NOT include any markdown syntax or code block indicators (like \`\`\`typescript).
-      Output ONLY the raw test code that can be directly saved to a .spec.ts file.
-      
-      PR Changes:
-      ${diff}
-      
-      Generate a Playwright test that:
-      1. Covers the main functionality changes
-      2. Includes appropriate assertions
-      3. Follows Playwright best practices
-      4. Uses page object model if appropriate
-      5. Includes appropriate setup and teardown
-      6. Is written in TypeScript
-      7. Use baseUrl: '/'
-      8. Use web-first assertions if possible`
+                content: `You are an expert in Playwright E2E testing. Based on the following PR changes, generate test scaffolding.
+                For each main UI component or feature change in the PR:
+                1. Create appropriate selectors using data-testid, role, or other reliable attributes
+                2. Define empty test cases with descriptive names
+                3. Include setup with test.describe() and test.beforeEach() if needed
+                4. Add comments indicating what needs to be tested
+                
+                Fill in all selectors but leave the actual test logic empty.
+                Do NOT include any markdown syntax or code block indicators.
+                Prefer role-based selectors or data-testid when possible.
+                Output ONLY the raw test code that can be directly saved to a .spec.ts file.
+                
+                PR Changes:
+                ${diff}
+                
+                Example format:
+                import { test, expect } from '@playwright/test';
+        
+                // Selectors
+                const submitButton = 'button[role="button"][name="Submit"]';
+                const nameInput = 'input[data-testid="name-input"]';
+                const errorMessage = '[role="alert"]';
+        
+                test.describe('Login Form', () => {
+                  test.beforeEach(async ({ page }) => {
+                    // Setup code here
+                  });
+        
+                  test('should show error with empty fields', async ({ page }) => {
+                    // 1. Click submit with empty fields
+                    // 2. Verify error message
+                  });
+                });`
             }]
         });
         const testContent = message.content[0].text;
