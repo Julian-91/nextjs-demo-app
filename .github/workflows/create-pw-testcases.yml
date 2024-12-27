@@ -1,0 +1,60 @@
+name: Generate E2E Testcases
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  generate-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm install
+
+      - name: Wait for Vercel Preview
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
+        id: vercel-preview
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 60
+
+      - name: Print Preview URL
+        run: |
+          echo "Preview URL: ${{ steps.vercel-preview.outputs.url }}"
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git diff ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} > pr_diff.txt
+
+      - name: Generate E2E testcases
+        id: generate
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          node pw-test-generator.mjs
+
+      - name: Commit and push tests
+        if: success()
+        run: |
+          if [[ -n "$(git status --porcelain e2e/generated/)" ]]; then
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+            git add e2e/generated/*.spec.ts
+            git commit -m "chore: add generated e2e tests"
+            git push
+          else
+            echo "No new tests to commit"
+          fi
