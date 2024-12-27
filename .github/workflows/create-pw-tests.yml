@@ -61,4 +61,6 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run playwright tests
-        run: npx playwright test --base-url=${{ steps.vercel-preview.outputs.url }}
+        run: npx playwright test
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.vercel-preview.outputs.url }}
